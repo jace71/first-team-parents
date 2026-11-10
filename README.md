@@ -1,36 +1,144 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# First Team Parents
 
-## Getting Started
+A phone-friendly guide for parents about travel ball and club sports. The pages live in Markdown files, so a new guide is a new file rather than a new database entry.
 
-First, run the development server:
+## Run it locally (Windows PowerShell)
 
-```bash
+Open PowerShell, go to this project folder, then:
+
+```powershell
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). The page refreshes when you save a file. Stop the server with Ctrl+C.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+To check the production build the same way the host will:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```powershell
+npm run build
+```
 
-## Learn More
+## How the pieces fit
 
-To learn more about Next.js, take a look at the following resources:
+- `src/app` — the routes. `/` is the homepage. Everything else in the header is drawn from a file in `content/`.
+- `src/components` — the header, footer, and the small set of tags used inside Markdown (cards, checklists, the “what to do next” box).
+- `src/lib/content.js` — reads `content/` and turns a file into a page. This is the part that makes a new file into a new URL.
+- `src/lib/site.js` — the header links, and the coming-soon pages for links that do not have a file yet.
+- `content/pages` — the guides (Start here, Costs, More).
+- `content/articles` — longer pieces, listed at `/articles`.
+- `public` — the pennant logos. `src/fonts` — Inter.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Add a guide page
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Create a file in `content/pages`. The filename is the address: `content/pages/choosing-a-program.mdx` becomes `/choosing-a-program`. Use lowercase letters, numbers, and hyphens. `.md` and `.mdx` both work.
+2. Start the file with frontmatter (the `---` block). `title` and `description` are required. `description` is the summary search engines and link previews use.
 
-## Deploy on Vercel
+```md
+---
+title: "Choosing a program"
+description: "Red flags, questions to ask, and what good actually looks like."
+dek: "Red flags, questions to ask, and what good actually looks like."
+lede: "The intro paragraph under the title. One or two sentences is enough."
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## A section heading
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ordinary paragraphs, **bold**, and links to [Costs](/costs) are enough for most of a page.
+
+- A plain list looks like this.
+```
+
+3. Save, and refresh the browser. If the new address does not show up, stop the dev server and run `npm run dev` again.
+
+`dek` is the line directly under the title. `lede` is the longer intro under that. `metaTitle` is optional; use it when the browser-tab title should be longer than the on-page title (Costs does this).
+
+If the filename matches a link that currently says “still being written” (for example `choosing-a-program`), the real page replaces that note. You do not have to delete anything from `src/lib/site.js` for that to happen.
+
+To put a brand-new page in the header, add one line to `mainNav` in `src/lib/site.js`:
+
+```js
+{ href: "/your-page", label: "Your page" },
+```
+
+### When a page needs the designed blocks
+
+You do not import these. Write the tag in the file.
+
+```md
+## Where the money goes
+
+<Cards>
+
+<Card title="Team fees" label="The flyer number">
+
+The paragraph inside the card.
+
+<Ask>The darker line at the bottom of a card.</Ask>
+
+</Card>
+
+</Cards>
+
+## Side by side
+
+<Compare>
+
+| Cost | What it usually covers |
+| --- | --- |
+| Team fees | Dues and a basic uniform |
+
+<Note>The small line under a table.</Note>
+
+</Compare>
+
+<AddUp>
+
+## How to add it up
+
+<Checklist>
+
+- First question to ask.
+- Second question to ask.
+
+</Checklist>
+
+</AddUp>
+
+<Next>
+
+A short lead-in to the links below.
+
+<NextLinks>
+
+<NextLink href="/costs" description="What the flyer leaves out.">Costs</NextLink>
+
+</NextLinks>
+
+</Next>
+```
+
+Leave a blank line between a tag and the Markdown inside it. That blank line is what lets the paragraphs and lists stay Markdown.
+
+Start here (`content/pages/start-here.mdx`) and Costs (`content/pages/costs.mdx`) are the working examples. Copy from those.
+
+## Add an article
+
+1. Create `content/articles/your-question.mdx`. The address will be `/articles/your-question`.
+2. Frontmatter needs `title`, `description`, and `date` as `YYYY-MM-DD`. `dek` is optional. Set `placeholder: true` only for a sample that should wear the Sample label.
+3. Write the article under the frontmatter, the same way as a guide. It is listed on `/articles`, newest date first.
+
+```md
+---
+title: "One question, answered plainly"
+description: "The sentence that shows on the articles list."
+dek: "The line under the title."
+date: "2026-11-10"
+---
+
+The article starts here.
+```
+
+`content/articles/sample-article.mdx` is a labeled placeholder. Delete it once a real article is in the folder. The articles section needs at least one file in order to build.
+
+Internal links start with `/`, for example `/costs`. Do not use the old `.html` names.
