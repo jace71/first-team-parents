@@ -1,13 +1,16 @@
-import { Suspense } from "react";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { site } from "@/lib/site";
-import SiteNav, { NavList } from "@/components/SiteNav";
+import { usePathname } from "next/navigation";
+import { homeNav, site } from "@/lib/site";
 
 export default function Footer() {
+  const pathname = usePathname();
+
   return (
     <footer className="site-footer">
-      <div className="container footer-inner">
+      <div className="footer-inner">
         <div className="footer-brand">
           <Link className="footer-logo" href="/" aria-label="First Team Parents home">
             <Image
@@ -26,13 +29,23 @@ export default function Footer() {
             <p className="footer-description">{site.footerDescription}</p>
           </div>
         </div>
-        <Suspense
-          fallback={
-            <NavList label="Footer navigation" className="footer-nav" />
-          }
-        >
-          <SiteNav label="Footer navigation" className="footer-nav" />
-        </Suspense>
+        <div>
+          <nav className="footer-nav" aria-label="Footer">
+            <ul>
+              {homeNav.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    aria-current={pathname === item.href ? "page" : undefined}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <p className="footer-meta">{site.footerMeta}</p>
+        </div>
       </div>
     </footer>
   );

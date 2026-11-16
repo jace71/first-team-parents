@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import GuideLayout from "@/components/GuideLayout";
 import { formatDate, getArticle, listArticles, renderBody } from "@/lib/content";
 
 export function generateStaticParams() {
@@ -27,20 +28,20 @@ export default async function ArticlePage({ params }) {
   if (!article) notFound();
 
   return (
-    <article>
-      <header className="page-intro">
+    <GuideLayout>
+      <div className="prose-block">
         {article.placeholder ? (
-          <p className="sample-banner">
+          <p className="sample-note">
             Sample — this article is a placeholder, not a finished guide
           </p>
         ) : null}
-        <h1>{article.title}</h1>
-        {article.dek ? <p className="dek">{article.dek}</p> : null}
-        <p className="article-date">
+        <h1 className="page-title">{article.title}</h1>
+        {article.dek ? <p className="page-dek">{article.dek}</p> : null}
+        <p className="page-meta">
           <time dateTime={article.date}>{formatDate(article.date)}</time>
         </p>
-      </header>
-      <div className="guide">{await renderBody(article.body)}</div>
-    </article>
+      </div>
+      <div className="guide-body">{await renderBody(article.body)}</div>
+    </GuideLayout>
   );
 }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import GuideLayout from "@/components/GuideLayout";
 import { formatDate, listArticles } from "@/lib/content";
 
 export const metadata = {
@@ -11,44 +12,35 @@ export default function ArticlesPage() {
   const articles = listArticles();
 
   return (
-    <>
-      <header className="page-intro">
-        <h1>Articles</h1>
-        <p className="dek">Longer reads, added one file at a time.</p>
-        <p className="lede">
+    <GuideLayout>
+      <div className="prose-block">
+        <h1 className="page-title">Articles</h1>
+        <p className="page-dek">Longer reads, added one file at a time.</p>
+        <p className="page-lede">
           The main guides stay short. An article is for one question that needs
           more room. A piece marked Sample is a placeholder, not a finished
           guide.
         </p>
-      </header>
-
+      </div>
       {articles.length === 0 ? (
-        <p className="lede">No articles yet.</p>
+        <p className="page-lede">No articles yet.</p>
       ) : (
-        <ul className="article-list">
+        <div className="card-stack">
           {articles.map((article) => (
-            <li key={article.slug}>
-              <article className="topic-card">
-                <p className="article-meta">
-                  <time dateTime={article.date}>{formatDate(article.date)}</time>
-                  {article.placeholder ? (
-                    <span className="term-label">Sample</span>
-                  ) : null}
-                </p>
-                <h2>{article.title}</h2>
-                <p>{article.description}</p>
-                <Link
-                  className="read-link"
-                  href={`/articles/${article.slug}`}
-                  aria-label={`Read ${article.title}`}
-                >
-                  Read <span className="arrow" aria-hidden="true">→</span>
-                </Link>
-              </article>
-            </li>
+            <article className="card" key={article.slug}>
+              <p className="page-meta">
+                <time dateTime={article.date}>{formatDate(article.date)}</time>
+                {article.placeholder ? " · Sample" : null}
+              </p>
+              <h2>{article.title}</h2>
+              <p>{article.description}</p>
+              <Link className="card-link" href={`/articles/${article.slug}`}>
+                Read <span aria-hidden="true">→</span>
+              </Link>
+            </article>
           ))}
-        </ul>
+        </div>
       )}
-    </>
+    </GuideLayout>
   );
 }

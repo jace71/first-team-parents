@@ -7,12 +7,13 @@ export const metadata = {
 
 export default function NotFound() {
   return (
-    <header className="page-intro">
-      <h1>Page not found</h1>
-      <p className="lede">
-        That address is not part of this guide.{" "}
-        <Link href="/">Back to the homepage.</Link>
-      </p>
-    </header>
+    <main id="main" className="missing">
+      <div className="prose-block">
+        <h1 className="page-title">Page not found</h1>
+        <p className="page-lede">
+          That address is not part of this guide. <Link href="/">Back to the homepage.</Link>
+        </p>
+      </div>
+    </main>
   );
 }

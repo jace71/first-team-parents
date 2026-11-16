@@ -3,8 +3,21 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "./globals.css";
 
-// The variable file shipped with the preview. weight "100 900" keeps
-// regular, medium, and semibold as real Inter weights rather than fakes.
+// Instrument Sans is the display face (titles). Inter is the body face.
+const instrument = localFont({
+  src: [
+    {
+      path: "../fonts/instrument-sans.ttf",
+      weight: "100 900",
+      style: "normal",
+    },
+  ],
+  display: "swap",
+  variable: "--font-instrument",
+  adjustFontFallback: "Arial",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+});
+
 const inter = localFont({
   src: [
     {
@@ -30,15 +43,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${inter.className}`}>
+    <html lang="en" className={`${instrument.variable} ${inter.variable}`}>
       <body>
         <a className="skip-link" href="#main">
           Skip to content
         </a>
         <Header />
-        <main id="main" className="container">
-          {children}
-        </main>
+        {children}
         <Footer />
       </body>
     </html>
