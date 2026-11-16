@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import ComingSoon from "@/components/ComingSoon";
+import GuideLayout from "@/components/GuideLayout";
 import { getPage, listPages, renderBody } from "@/lib/content";
-import { plannedPages } from "@/lib/site";
+import { chapterLabel, plannedPages } from "@/lib/site";
 
-// Build a page for every content file, plus a coming-soon page for each
-// nav link that does not have a file yet. A new .md or .mdx file whose name
-// matches one of those links replaces the coming-soon page automatically.
+// One route for every file in content/pages, plus a coming-soon page for
+// each chapter that does not have a file yet.
 export function generateStaticParams() {
   const fromFiles = listPages().map((page) => ({ slug: page.slug }));
   const written = new Set(fromFiles.map((page) => page.slug));
@@ -40,22 +40,24 @@ export async function generateMetadata({ params }) {
 export default async function Page({ params }) {
   const { slug } = await params;
   const page = getPage(slug);
+  const kicker = chapterLabel(slug);
 
   if (page) {
     return (
-      <article>
-        <header className="page-intro">
-          <h1>{page.title}</h1>
-          {page.dek ? <p className="dek">{page.dek}</p> : null}
-          {page.lede ? <p className="lede">{page.lede}</p> : null}
-        </header>
-        <div className="guide">{await renderBody(page.body)}</div>
-      </article>
+      <GuideLayout slug={slug}>
+        <div className="prose-block">
+          {kicker ? <p className="chapter-kicker">{kicker}</p> : null}
+          <h1 className="page-title">{page.title}</h1>
+          {page.dek ? <p className="page-dek">{page.dek}</p> : null}
+          {page.lede ? <p className="page-lede">{page.lede}</p> : null}
+        </div>
+        <div className="guide-body">{await renderBody(page.body)}</div>
+      </GuideLayout>
     );
   }
 
   const planned = plannedPages.find((item) => item.slug === slug);
   if (!planned) notFound();
 
-  return <ComingSoon title={planned.title} summary={planned.summary} />;
+  return <ComingSoon slug={slug} title={planned.title} summary={planned.summary} />;
 }

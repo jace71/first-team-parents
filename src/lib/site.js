@@ -1,36 +1,104 @@
-// Shared links and the short bits of site copy that appear in more than one place.
-// The header and footer read `mainNav`. A page that is not written yet still
-// has a link here; `plannedPages` is what that link opens until a Markdown
-// file with the same name exists in content/pages.
+// Shared links. `chapters` is the guide order from the approved preview.
+// A chapter without a file in content/pages still has a link; `plannedPages`
+// is the short “still being written” page until that file exists.
 
 export const site = {
   name: "First Team Parents",
-  motto: "A practical guide to travel and club sports, written for parents",
   footerDescription:
     "Practical, honest information for parents navigating travel and club sports.",
+  footerMeta: "A practical guide, written for parents",
 };
 
-export const mainNav = [
-  { href: "/start-here", label: "Start here" },
-  { href: "/costs", label: "Costs" },
-  { href: "/choosing-a-program", label: "Choosing a program" },
-  { href: "/tryouts", label: "Tryouts" },
-  { href: "/more", label: "More" },
+// title: chapter list. navLabel: homepage header and footer.
+// chip: the short label on the phone chapter row.
+export const chapters = [
+  {
+    slug: "start-here",
+    href: "/start-here",
+    title: "Start here",
+    navLabel: "Start here",
+    chip: "Start here",
+  },
+  {
+    slug: "costs",
+    href: "/costs",
+    title: "Costs",
+    navLabel: "Costs",
+    chip: "Costs",
+  },
+  {
+    slug: "choosing-a-program",
+    href: "/choosing-a-program",
+    title: "Choosing a program",
+    navLabel: "Choosing a program",
+    chip: "Choosing",
+  },
+  {
+    slug: "tryouts",
+    href: "/tryouts",
+    title: "Tryouts",
+    navLabel: "Tryouts",
+    chip: "Tryouts",
+  },
+  {
+    slug: "family-life-and-burnout",
+    href: "/family-life-and-burnout",
+    title: "Family life & burnout",
+    navLabel: "Family life",
+    chip: "Family",
+  },
+  {
+    slug: "safety",
+    href: "/safety",
+    title: "Safety",
+    navLabel: "Safety",
+    chip: "Safety",
+  },
+  {
+    slug: "glossary",
+    href: "/glossary",
+    title: "Glossary",
+    navLabel: "Glossary",
+    chip: "Glossary",
+  },
+  {
+    slug: "about",
+    href: "/about",
+    title: "About",
+    navLabel: "About",
+    chip: "About",
+  },
 ];
 
-export const utilityNav = [
-  { href: "/safety", label: "Safety" },
-  { href: "/glossary", label: "Glossary" },
-  { href: "/about", label: "About" },
+export const articlesNav = { href: "/articles", label: "Articles" };
+
+// Full topic list on the homepage header and in the footer on every page.
+export const homeNav = [
+  ...chapters.map((chapter) => ({
+    href: chapter.href,
+    label: chapter.navLabel,
+  })),
+  articlesNav,
 ];
 
-export const familyLink = {
-  href: "/family-life-and-burnout",
-  label: "Read more about family life and burnout.",
-};
+// Interior pages use the short header: The guide, Articles, About.
+export const shortNav = [
+  { href: "/start-here", label: "The guide", key: "guide" },
+  { href: "/articles", label: "Articles", key: "articles" },
+  { href: "/about", label: "About", key: "about" },
+];
 
-// Summaries here are the same sentences already used on the homepage cards
-// and in the Costs "what to do next" links. They are not new claims.
+export function chapterIndex(slug) {
+  return chapters.findIndex((chapter) => chapter.slug === slug);
+}
+
+export function chapterLabel(slug) {
+  const index = chapterIndex(slug);
+  if (index < 0) return null;
+  return `Chapter ${index + 1} of ${chapters.length}`;
+}
+
+// Card sentences from the approved homepage. Shown on a chapter until its file exists.
 export const plannedPages = [
   {
     slug: "choosing-a-program",
@@ -50,23 +118,30 @@ export const plannedPages = [
   },
   {
     slug: "family-life-and-burnout",
-    title: "Family life and burnout",
-    description: "What the schedule costs beyond money.",
-    summary: "What the schedule costs beyond money.",
+    title: "Family life & burnout",
+    description: "The time commitment is real—and it affects everyone.",
+    summary: "The time commitment is real—and it affects everyone.",
   },
   {
     slug: "safety",
     title: "Safety",
-    description: "This page is still being written.",
+    description:
+      "Practical things parents can watch for, ask about, and expect from a program.",
+    summary:
+      "Practical things parents can watch for, ask about, and expect from a program.",
   },
   {
     slug: "glossary",
     title: "Glossary",
-    description: "This page is still being written.",
+    description: "Plain-language definitions for the terms you will hear.",
+    summary: "Plain-language definitions for the terms you will hear.",
   },
   {
     slug: "about",
     title: "About",
-    description: "This page is still being written.",
+    description:
+      "Who writes this guide and what you can expect from the advice on the site.",
+    summary:
+      "Who writes this guide and what you can expect from the advice on the site.",
   },
 ];

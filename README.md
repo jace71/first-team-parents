@@ -21,13 +21,14 @@ npm run build
 
 ## How the pieces fit
 
-- `src/app` — the routes. `/` is the homepage. Everything else in the header is drawn from a file in `content/`.
-- `src/components` — the header, footer, and the small set of tags used inside Markdown (cards, checklists, the “what to do next” box).
+- `src/app/globals.css` — the design tokens and layout from the approved preview. Colors, type, and spacing live here as CSS variables. Tailwind’s font stack points at the same faces.
+- `src/app` — the routes. `/` is the homepage. A guide page is `src/app/[slug]/page.js`, which reads one file from `content/pages`.
+- `src/components` — the header, footer, the guide chapter list (`GuideLayout.js`), and the tags used inside Markdown (term cards, the comparison table, the checklist, the sage “what to do next” box).
 - `src/lib/content.js` — reads `content/` and turns a file into a page. This is the part that makes a new file into a new URL.
-- `src/lib/site.js` — the header links, and the coming-soon pages for links that do not have a file yet.
-- `content/pages` — the guides (Start here, Costs, More).
+- `src/lib/site.js` — the eight chapters, in order, and the coming-soon text for chapters that do not have a file yet.
+- `content/pages` — the guides (Start here, Costs, and the rest as they are written).
 - `content/articles` — longer pieces, listed at `/articles`.
-- `public` — the pennant logos. `src/fonts` — Inter.
+- `public` — the pennant logos. `src/fonts` — Instrument Sans (titles) and Inter (body).
 
 ## Add a guide page
 
@@ -55,11 +56,7 @@ Ordinary paragraphs, **bold**, and links to [Costs](/costs) are enough for most 
 
 If the filename matches a link that currently says “still being written” (for example `choosing-a-program`), the real page replaces that note. You do not have to delete anything from `src/lib/site.js` for that to happen.
 
-To put a brand-new page in the header, add one line to `mainNav` in `src/lib/site.js`:
-
-```js
-{ href: "/your-page", label: "Your page" },
-```
+The homepage header and the chapter list are the `chapters` array in `src/lib/site.js`. A new guide shows up at its address as soon as the file exists. Add it to `chapters` only when it should appear in that list.
 
 ### When a page needs the designed blocks
 

@@ -1,27 +1,27 @@
-// Tags an author can use inside a content file, without importing anything.
-// Markdown already covers paragraphs, headings, lists, links, and tables.
-// These components are only for the pieces the preview styles specially:
-// the blue-edged cards, the checkbox list, and the "What to do next" box.
-//
-// See README.md for a short example of each.
+// Tags a content file can use without an import.
+// Markdown covers paragraphs, headings, lists, links, and tables.
+// These match the interior pieces in the approved preview:
+// term cards, the comparison table, the checklist, and the sage callout.
 
-import { Children, isValidElement } from "react";
+import { Children, cloneElement, isValidElement } from "react";
 import Link from "next/link";
 
 export function MdxLink({ href = "", children }) {
   if (href.startsWith("/")) {
     return <Link href={href}>{children}</Link>;
   }
+  if (href.startsWith("#")) {
+    return <a href={href}>{children}</a>;
+  }
   return <a href={href}>{children}</a>;
 }
 
 export function MdxH2({ children }) {
-  return <h2 className="section-heading">{children}</h2>;
+  return <h2>{children}</h2>;
 }
 
-// remark-gfm renders every body cell as <td>. The preview's first column
-// is a row header (bolder, and announced as a header). Swap that first
-// cell. Header-row cells are already <th> and stay column headers.
+// remark-gfm renders body cells as <td>. The preview's first column is a
+// row header, which is also the column that sticks on a narrow screen.
 export function MdxRow({ children }) {
   const cells = Children.toArray(children);
   const firstBodyCell = cells.findIndex(
@@ -52,14 +52,17 @@ export function MdxColumnHeader({ children, node, scope, ...props }) {
 
 export function MdxTable({ children, node, ...props }) {
   return (
-    <div
-      className="table-wrap"
-      role="region"
-      tabIndex={0}
-      aria-label="Comparison table"
-    >
-      <table {...props}>{children}</table>
-    </div>
+    <>
+      <p className="table-scroll-hint">Swipe sideways to see the full comparison.</p>
+      <div
+        className="table-wrap"
+        role="region"
+        tabIndex={0}
+        aria-label="Comparison table"
+      >
+        <table {...props}>{children}</table>
+      </div>
+    </>
   );
 }
 
@@ -77,7 +80,6 @@ export function Card({ title, label, id, children }) {
   );
 }
 
-// The darker line at the bottom of a card ("Ask what's included…").
 export function Ask({ children }) {
   return <p className="ask">{children}</p>;
 }
@@ -91,16 +93,27 @@ export function Note({ children }) {
 }
 
 export function AddUp({ children }) {
-  return <section className="addup">{children}</section>;
+  return <section>{children}</section>;
 }
 
 export function Checklist({ children }) {
-  return <div className="checklist-wrap">{children}</div>;
+  return Children.map(children, (child) => {
+    if (isValidElement(child) && child.type === "ul") {
+      return cloneElement(child, { className: "checklist" });
+    }
+    return child;
+  });
 }
 
-export function Next({ title = "What to do next", children }) {
+// `kicker` is the small sage label on the callout. Pass null to omit it.
+export function Next({
+  title = "What to do next",
+  kicker = "Before you commit",
+  children,
+}) {
   return (
     <aside className="next-box" aria-labelledby="next-heading">
+      {kicker ? <p className="kicker kicker-sage">{kicker}</p> : null}
       <h2 id="next-heading">{title}</h2>
       {children}
     </aside>
@@ -115,10 +128,7 @@ export function NextLink({ href, description, children }) {
   return (
     <li>
       <Link href={href}>
-        {children}{" "}
-        <span className="arrow" aria-hidden="true">
-          →
-        </span>
+        {children} <span aria-hidden="true">→</span>
       </Link>
       {description ? <span className="desc">{description}</span> : null}
     </li>
