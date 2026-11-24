@@ -846,14 +846,16 @@ tbody tr:last-child td { border-bottom: none; }
   max-width: var(--width-prose);
 }
 .guide-body > p { margin: 0 0 1rem; }
-.guide-body > ul,
+/* Checklist is also a ul. Leave its own rules (no bullet, no extra indent)
+   in charge so the sage checkbox is the only marker. */
+.guide-body > ul:not(.checklist),
 .guide-body > ol {
   margin: 0 0 var(--space-5);
   padding-left: 1.25rem;
 }
-.guide-body > ul { list-style: disc; }
+.guide-body > ul:not(.checklist) { list-style: disc; }
 .guide-body > ol { list-style: decimal; }
-.guide-body > ul li + li,
+.guide-body > ul:not(.checklist) li + li,
 .guide-body > ol li + li { margin-top: 0.35rem; }
 .page-meta {
   margin: 0 0 var(--space-4);
