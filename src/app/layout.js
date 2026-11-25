@@ -1,6 +1,9 @@
 import localFont from "next/font/local";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import GoogleAnalyticsPageView from "@/components/GoogleAnalyticsPageView";
+import { gaMeasurementId } from "@/lib/analytics";
 import { defaultDescription, defaultTitle, siteUrl, titleSuffix } from "@/lib/seo";
 import "./globals.css";
 
@@ -53,6 +56,8 @@ export default function RootLayout({ children }) {
         {children}
         <Footer />
       </body>
+      <GoogleAnalytics gaId={gaMeasurementId} />
+      <GoogleAnalyticsPageView />
     </html>
   );
 }
