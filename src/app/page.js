@@ -1,12 +1,12 @@
 import Link from "next/link";
+import { defaultDescription, defaultTitle, pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: {
-    absolute: "First Team Parents — A practical guide to travel and club sports",
-  },
-  description:
-    "A practical guide to travel and club sports, written for parents. Understand costs, choose a program, and prepare for tryouts.",
-};
+export const metadata = pageMetadata({
+  title: defaultTitle,
+  description: defaultDescription,
+  path: "/",
+  absoluteTitle: true,
+});
 
 const topics = [
   {

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import ComingSoon from "@/components/ComingSoon";
 import GuideLayout from "@/components/GuideLayout";
 import { getPage, listPages, renderBody } from "@/lib/content";
+import { pageMetadata, unlistedSlugs } from "@/lib/seo";
 import { chapterLabel, plannedPages } from "@/lib/site";
 
 // One route for every file in content/pages, plus a coming-soon page for
@@ -20,21 +21,29 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const page = getPage(slug);
   if (page) {
-    return {
+    return pageMetadata({
       title: page.metaTitle,
       description: page.description,
-    };
+      path: `/${slug}`,
+      index: !unlistedSlugs.has(slug),
+    });
   }
 
+  // No file yet: the route renders the “still being written” page.
   const planned = plannedPages.find((item) => item.slug === slug);
   if (planned) {
-    return {
+    return pageMetadata({
       title: planned.title,
       description: planned.description,
-    };
+      path: `/${slug}`,
+      index: false,
+    });
   }
 
-  return { title: "Page not found" };
+  return {
+    title: "Page not found",
+    robots: { index: false, follow: false },
+  };
 }
 
 export default async function Page({ params }) {

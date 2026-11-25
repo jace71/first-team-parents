@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import GuideLayout from "@/components/GuideLayout";
 import { formatDate, getArticle, listArticles, renderBody } from "@/lib/content";
+import { pageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
   const articles = listArticles();
@@ -15,11 +16,19 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const article = getArticle(slug);
-  if (!article) return { title: "Page not found" };
-  return {
+  if (!article) {
+    return {
+      title: "Page not found",
+      robots: { index: false, follow: false },
+    };
+  }
+  return pageMetadata({
     title: article.metaTitle,
     description: article.description,
-  };
+    path: `/articles/${slug}`,
+    type: "article",
+    publishedTime: `${article.date}T00:00:00.000Z`,
+  });
 }
 
 export default async function ArticlePage({ params }) {
