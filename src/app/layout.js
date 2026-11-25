@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { defaultDescription, defaultTitle, siteUrl, titleSuffix } from "@/lib/seo";
 import "./globals.css";
 
 // Instrument Sans is the display face (titles). Inter is the body face.
@@ -33,12 +34,12 @@ const inter = localFont({
 });
 
 export const metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "First Team Parents — A practical guide to travel and club sports",
-    template: "%s — First Team Parents",
+    default: defaultTitle,
+    template: `%s${titleSuffix}`,
   },
-  description:
-    "A practical guide to travel and club sports, written for parents. Understand costs, choose a program, and prepare for tryouts.",
+  description: defaultDescription,
 };
 
 export default function RootLayout({ children }) {

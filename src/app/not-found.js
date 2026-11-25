@@ -3,6 +3,7 @@ import Link from "next/link";
 export const metadata = {
   title: "Page not found",
   description: "That address is not part of this guide.",
+  robots: { index: false, follow: false },
 };
 
 export default function NotFound() {

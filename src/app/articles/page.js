@@ -1,12 +1,14 @@
 import Link from "next/link";
 import GuideLayout from "@/components/GuideLayout";
 import { formatDate, listArticles } from "@/lib/content";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: "Articles",
   description:
     "Longer reads for parents navigating travel and club sports. New articles are added as files.",
-};
+  path: "/articles",
+});
 
 export default function ArticlesPage() {
   const articles = listArticles();
